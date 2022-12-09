@@ -1,5 +1,5 @@
 // Fetch all country data
-fetch('./data/countries.geojson').then(res => res.json()).then(countries => {
+fetch('./data/Energy.geojson').then(res => res.json()).then(countries => {
     // Create the 3D globe
     const world = Globe({
             animateIn: false
@@ -15,11 +15,18 @@ fetch('./data/countries.geojson').then(res => res.json()).then(countries => {
         .polygonStrokeColor(country => 'black')
         .polygonLabel(({
             properties: country
-        }) => `
-          <b>${country.ADMIN} (${country.ISO_A2}):</b> <br />
-          GDP: <i>${country.GDP_MD_EST}</i> M$<br/>
-          Population: <i>${country.POP_EST}</i>
-        `)
+        }) => 
+        // `
+        //   <b>${country.ADMIN} (${country.ISO_A2}):</b> <br />
+        //   GDP: <i>${country.GDP_MD_EST}</i> M$<br/>
+        //   Population: <i>${country.POP_EST}</i>
+        // `
+        `
+        COUNTRY:<b>${country.COUNTRY}</b> <br />
+        OBJECTID: <i>${country.OBJECTID}</i><br/>
+        CAPACITY: <i>${country.capacity_m}</i>
+        `
+        )
         .onPolygonHover(hover => world
             .polygonAltitude(country => country === hover ? 0.02 : 0.001)
             .polygonSideColor(country => country === hover ? '#00000080' : 'transparent')
