@@ -1,16 +1,21 @@
 // Fetch all country data
-fetch('./data/Energy.geojson').then(res => res.json()).then(countries => {
+fetch('./data/Solar_Energy_geo.geojson').then(res => res.json()).then(countries => {
+    // console.log(country.properties.Color);
     // Create the 3D globe
     const world = Globe({
             animateIn: false
         })
         .globeImageUrl('./assets/img/earth-blue-marble.jpg')
         .bumpImageUrl('./assets/img/earth-topology.png')
-        .backgroundImageUrl('./assets/img/night-sky.png')
+        // .backgroundImageUrl('./assets/img/night-sky.png')
+        .backgroundColor('#ffffff') // To Background Color Change
         .lineHoverPrecision(0)
         .polygonsData(countries.features.filter(country => country.properties.ISO_A2 !== 'AQ'))
-        .polygonAltitude(0.001)
-        .polygonCapColor(country => 'transparent')
+        .polygonAltitude(0.003)
+        .polygonCapColor(country => country.properties.color)
+        // .polygonCapColor(countries.features.filter(country => country.properties.Color))
+        // .polygonCapColor(country => country === hover ? 'yellow' : 'transparent')
+
         .polygonSideColor(country => 'transparent')
         .polygonStrokeColor(country => 'black')
         .polygonLabel(({
@@ -23,14 +28,14 @@ fetch('./data/Energy.geojson').then(res => res.json()).then(countries => {
         // `
         `
         COUNTRY:<b>${country.COUNTRY}</b> <br />
-        OBJECTID: <i>${country.OBJECTID}</i><br/>
-        CAPACITY: <i>${country.capacity_m}</i>
+        CAPACITY: <i>${country.capacity_1}</i>
         `
         )
         .onPolygonHover(hover => world
-            .polygonAltitude(country => country === hover ? 0.02 : 0.001)
+            .polygonAltitude(country => country === hover ? 0.04 : 0.003)
             .polygonSideColor(country => country === hover ? '#00000080' : 'transparent')
-            .polygonCapColor(country => country === hover ? 'yellow' : 'transparent')
+            // .polygonCapColor(country => country === hover ? 'yellow' : 'transparent')
+            // .polygonCapColor(country => country === hover ? country.properties.Color : 'transparent')
         )
         .polygonsTransitionDuration(300)
         (document.getElementById('globe'));
@@ -39,7 +44,7 @@ fetch('./data/Energy.geojson').then(res => res.json()).then(countries => {
     const globeMaterial = world.globeMaterial();
     globeMaterial.bumpScale = 20;
 
-    new THREE.TextureLoader().load('./assets/img/earth-water.png', texture => {
+    new THREE.TextureLoader().load('', texture => {
         globeMaterial.specularMap = texture;
         globeMaterial.specular = new THREE.Color('grey');
         globeMaterial.shininess = 15;
